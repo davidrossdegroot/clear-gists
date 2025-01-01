@@ -10,3 +10,5 @@ gem "rspec"
 gem "dotenv"
 
 gem "webmock", "~> 3.24"
+
+gem "standardrb", "~> 1.0"

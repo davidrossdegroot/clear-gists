@@ -3,8 +3,8 @@ require 'uri'
 require 'json'
 
 class RemoveGists
-  def initialize(token)
-    @token = token
+  def initialize(token=nil)
+    @token = ENV.fetch('GIST_PAT', token)
     @base_url = 'https://api.github.com/gists'
   end
 

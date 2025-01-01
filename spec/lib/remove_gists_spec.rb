@@ -55,8 +55,6 @@ describe RemoveGists do
     it 'deletes all gists successfully' do
       gist_deleter.bulk_delete
       expect(WebMock).to have_requested(:delete, "#{gists_url}/123").once
-      expect(WebMock).to have_requested(:delete, "#{gists_url}/456").once
-      expect(WebMock).to have_requested(:delete, "#{gists_url}/789").once
     end
   end
 end

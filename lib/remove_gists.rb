@@ -22,7 +22,9 @@ class RemoveGists
     req = Net::HTTP::Get.new(uri)
     req['Authorization'] = "Bearer #{@token}"
     res = Net::HTTP.start(uri.hostname, uri.port, use_ssl: true) { |http| http.request(req) }
-    JSON.parse(res.body) if res.is_a?(Net::HTTPSuccess)
+    body = JSON.parse(res.body) if res.is_a?(Net::HTTPSuccess)
+    # Filter for iOS Gists
+    body.filter { it['files'].keys.first.include?("iOS Note")  }
   end
 
   def delete_gist(gist_id)

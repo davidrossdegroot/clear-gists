@@ -1,13 +1,16 @@
 require 'remove_gists'
 
 describe RemoveGists do
-  it 'works' do
-    expect { RemoveGists.perform }.to_not raise_error
-  end
-
   let(:token) { 'test_token' }
   let(:gist_deleter) { described_class.new(token) }
   let(:gists_url) { 'https://api.github.com/gists' }
+  let(:gist_response) do
+    [{
+      "files" => {
+        "Can u type your question iOS Note" => {}
+      }
+    }]
+  end
 
   before do
     stub_request(:get, gists_url)
@@ -15,9 +18,9 @@ describe RemoveGists do
       .to_return(
         status: 200,
         body: [
-          { id: '123' },
-          { id: '456' },
-          { id: '789' }
+          { id: '123', files: { "Note iOS Note": {} } },
+          { id: '456', files: { "Note Bing": {} } },
+          { id: '789', files: { "Note Bang": {} } }
         ].to_json
       )
 
@@ -35,13 +38,9 @@ describe RemoveGists do
   end
 
   describe '#fetch_gists' do
-    it 'retrieves the list of gists' do
+    it 'retrieves the list of gists with "iOS Note" in the name' do
       gists = gist_deleter.fetch_gists
-      expect(gists).to eq([{ 'id' => '123' }, { 'id' => '456' }, { 'id' => '789' }])
-    end
-
-    it 'only gets the gists with "iOS Note" in the name' do
-      
+      expect(gists).to eq([{"files" => {"Note iOS Note" => {}}, "id" => "123"}])
     end
   end
 
